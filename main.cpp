@@ -323,7 +323,7 @@ int main(){
 
 	//test FindAll Comports
 
-	const int size = 10; 
+	const int size = 20; 
 	int ports[size] = {}; //look for YEI devices in the first 10 COM ports
 
 	int numDevices = FindAllComPorts(ports);
@@ -336,7 +336,7 @@ int main(){
 		{
 			std::cout << "YEI Device Connected at COM PORT " << ports[i] << "\n Attempting to connect...... "<< std::endl;
 
-			unsigned int device = ConnectToComPort(ports[0]);
+			unsigned int device = ConnectToComPort(ports[i]);
 			
 			float quat[4];
 
@@ -349,7 +349,7 @@ int main(){
 		}
 		else
 		{
-		
+			
 		}
 
 	}	
