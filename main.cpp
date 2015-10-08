@@ -1,12 +1,10 @@
-// This example finds and creates the device and returns a TSS_ID which is
-// needed to call many functions in the API
 #include "yei_threespace_api.h"
 #include <stdio.h>
 #include <string>
 #include <iostream>
 
 using std::string;
-
+/** Find's active YEI devices connected to COM ports.**/
 int FindAllComPorts(int ports[]){
 	TSS_ComPort comport;
 	int offset = 0;
@@ -17,30 +15,14 @@ int FindAllComPorts(int ports[]){
 		/*	device = tss_createTSDeviceStr(comport.com_port, TSS_TIMESTAMP_SENSOR);*/
 		std::cout << "Current offset:" << offset << " port: " << comport.com_port<< " Friendly Name: "<< comport.friendly_name << std::endl;
 		ports[offset] = atoi(&comport.com_port[3]);
-
-		//if (device == TSS_NO_DEVICE_ID){
-		//	printf("Failed to create a sensor on %s\n", comport.com_port);
-		//	//return 1;
-		//}
-		//else{ 
-		//	TSS_ComInfo com_info;
-		//	if (tss_getTSDeviceInfo(device, &com_info) == TSS_NO_ERROR){
-		//		printf("============(%s)=============\n", comport.com_port);
-		//		printf("DeviceType:%s\nSerial:%08X\nHardwareVersion:%s\nFirmwareVersion:%s\nCompatibility:%d\n",
-		//			TSS_Type_String[com_info.device_type],
-		//			com_info.serial_number,
-		//			com_info.hardware_version,
-		//			com_info.firmware_version,
-		//			com_info.fw_compatibility);
-		//		printf("================================\n");
-		//	}
-		//}
+		
 		offset++;
 	}
 
 	return offset;
 }
 
+/** Connect to a Specific Comport **/
 UINT ConnectToComPort(UINT port){
 	TSS_Device_Id  device;
 	string com_port = "COM";
@@ -51,11 +33,11 @@ UINT ConnectToComPort(UINT port){
 		return TSS_ERROR_COMMAND_FAIL;
 	}
 	else{
-		//SensorDevices.push_back(device);
-		//numDevices++;
 		return device;
 	}
 }
+
+/**Returns orientation of a given sensor as a quaterinion.**/
  UINT GetOrientationAsQuaternion(UINT deviceID, float quat[]){
 
 
@@ -71,6 +53,9 @@ UINT ConnectToComPort(UINT port){
 	}
 }
 
+ /**Shows general methods of connecting and getting data from sensors using YEI's API.
+ * Function is self contained.
+ */
 int creating_class_instances(){
 	// If the COM port is already known and the device type is known for the 3-Space
 	// Sensor device, we can just create the appropriate instance without doing 
@@ -231,6 +216,9 @@ int creating_class_instances(){
 
 }
 
+/*Further examples of getting data after a device has been connected. .
+ * Function is self contained.
+ */
 int getting_information_wireless(){
 
 	TSS_Device_Id  device;
@@ -332,22 +320,39 @@ int main(){
 	//creating_class_instances();
 	//getting_information_wireless();
 
-	const int size = 10;
-	int ports[size] = {};
+
+	//test FindAll Comports
+
+	const int size = 10; 
+	int ports[size] = {}; //look for YEI devices in the first 10 COM ports
 
 	int numDevices = FindAllComPorts(ports);
 	std::cout << "Found " << numDevices << " YEI Sensors" << std::endl;
-	for (int i = 0; i < size; i++){
-		std::cout << "Ports[" << i << "] = " << ports[i] << std::endl;
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << "Ports[" << i << "] = " << ports[i] << std::endl; 
 
-	}
-	ConnectToComPort(ports[0]);
+		if (ports[i] != 0)
+		{
+			std::cout << "YEI Device Connected at COM PORT " << ports[i] << "\n Attempting to connect...... "<< std::endl;
 
-	float quat[4];
+			unsigned int device = ConnectToComPort(ports[0]);
+			
+			float quat[4];
 
-	GetOrientationAsQuaternion(ports[0], quat);
+			if (GetOrientationAsQuaternion(device, quat) < 20);
+			continue;	
 
-	
+			printf("Orientation of Sensor at COM Port %d is: X=%f,Y=%f,Z=%f,W=%F",ports[i], quat[0],quat[1],quat[2], quat[3]);		
+
+			tss_closeTSDevice(device);
+		}
+		else
+		{
+		
+		}
+
+	}	
 
 	getchar();
 	return 0;
