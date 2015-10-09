@@ -339,6 +339,9 @@ int main(){
 
 			unsigned int device = ConnectToComPort(ports[i]);
 			
+			if (device && TSS_ALL_SENSORS_ID)
+				std::cout << "Successfully connected to YEI Device" << std::endl;
+			
 			float quat[4];
 
 			if (GetOrientationAsQuaternion(device, quat) < 20);
