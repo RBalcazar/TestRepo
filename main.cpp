@@ -4,6 +4,7 @@
 #include <iostream>
 
 using std::string;
+
 /** Find's active YEI devices connected to COM ports.**/
 int FindAllComPorts(int ports[]){
 	TSS_ComPort comport;
@@ -37,7 +38,7 @@ UINT ConnectToComPort(UINT port){
 	}
 }
 
-/**Returns orientation of a given sensor as a quaterinion.**/
+/**Returns orientation of a given sensor as a quaternion.**/
  UINT GetOrientationAsQuaternion(UINT deviceID, float quat[]){
 
 
