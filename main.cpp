@@ -40,8 +40,6 @@ UINT ConnectToComPort(UINT port){
 
 /**Returns orientation of a given sensor as a quaternion.**/
  UINT GetOrientationAsQuaternion(UINT deviceID, float quat[]){
-
-
 	TSS_Error tss_error;
 	UINT timestamp;
 	tss_error = tss_getTaredOrientationAsQuaternion(deviceID, quat, &timestamp);
@@ -321,7 +319,6 @@ int main(){
 	//creating_class_instances();
 	//getting_information_wireless();
 
-
 	//test FindAll Comports
 
 	const int size = 20; 
@@ -344,7 +341,7 @@ int main(){
 			if (GetOrientationAsQuaternion(device, quat) < 20);
 			continue;	
 
-			printf("Orientation of Sensor at COM Port %d is: X=%f,Y=%f,Z=%f,W=%F",ports[i], quat[0],quat[1],quat[2], quat[3]);		
+			printf("Orientation of Sensor at COM Port %d is: X=%f,Y=%f,Z=%f,W=%F\n",ports[i], quat[0],quat[1],quat[2], quat[3]);		
 
 			tss_closeTSDevice(device);
 		}
